@@ -35,12 +35,6 @@ def minimax (model, position, depth=4, turn=False):
 if __name__ == '__main__':
     f = open('model.pickle', 'rb')
     m = pickle.load(f)
-    b = chess.Board()
-    for move in b.legal_moves:
-        b.push(move)
-        
-        print("%s %.14f" % (move.uci(), m(torch.from_numpy(Board(b).serialize()).float())))
-
-        b.pop()
-
-
+    b = chess.Board("r1bqkbnr/ppp2ppp/2np4/8/2B1P3/5Q2/PB3PPP/RN2K1NR w KQkq - 0 7")
+    print(b)
+    print(m(torch.from_numpy(Board(b).serialize()).float()).item())
