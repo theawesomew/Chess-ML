@@ -71,11 +71,12 @@ if __name__ == '__main__':
     
     losses = []
 
-    print("Before training valuation of a standard board position: ", model(standard_board_tensor).item())
-
     for i in range(len(dataset)):
         optim.zero_grad()
         pos, valuation = torch.from_numpy(dataset[i][:-1]).float(), torch.tensor([dataset[i][-1]], dtype=torch.float32)
+        turn = pos[-1].repeat((1, 8, 8))
+        pos = pos[:-1].reshape(4, 8, 8)
+        pos = torch.cat((pos, turn))
         output = model(pos)
         loss = floss(output, valuation)
         print("#%i: %.14f" % (i, loss))
@@ -86,7 +87,6 @@ if __name__ == '__main__':
     f = open('model.pickle', 'wb')
     f.write(pickle.dumps(model))
     f.close()
-    print("After training valuation of a standard board position: ", model(standard_board_tensor).item())
 
     x = np.arange(0, len(losses))
     y = np.array(losses)
